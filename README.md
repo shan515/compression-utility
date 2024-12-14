@@ -63,3 +63,13 @@ The system can be designed using a layered architecture, which typically consist
 4. **Download Compressed File**:
    - After uploading and compression, download the compressed file using the provided link.
 
+---
+
+## To-Do:
+
+1. **Improve compression logic**
+
+2. **Host backend on Heroku and Frontend on Vercel**
+
+
+
