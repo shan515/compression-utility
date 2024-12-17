@@ -29,8 +29,10 @@ public class FileService {
     public byte[] uploadFilesAndZip(MultipartFile[] files) throws IOException{
         List<Path> uploadedFilePaths = new ArrayList<>();
         // Copy and save uploadedFiles
+        String workingDir = System.getProperty("user.dir");
+        System.out.println("workingDir : "+workingDir);
         for(MultipartFile file : files){
-            Path filePath = Paths.get(uploadDir+File.separator+file.getOriginalFilename());
+            Path filePath = Paths.get(workingDir,uploadDir+File.separator+file.getOriginalFilename());
             Files.copy(file.getInputStream(), filePath);
             uploadedFilePaths.add(filePath);
         }
@@ -42,11 +44,13 @@ public class FileService {
     public byte[] zipFilesAndDownload(Path[] filesToZip, String zipFileName) throws IOException{
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try(ZipOutputStream zipOut = new ZipOutputStream(byteArrayOutputStream)){
+            zipOut.setLevel(9);
             for(Path file:filesToZip){
                 ZipEntry zipEntry = new ZipEntry(file.getFileName().toString());
                 zipOut.putNextEntry(zipEntry);
                 Files.copy(file,zipOut);
                 zipOut.closeEntry();
+                file.toFile().delete();
             }
         }
         return byteArrayOutputStream.toByteArray();
